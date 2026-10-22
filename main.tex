@@ -23,81 +23,113 @@ Q学習がどのように進んでいるか，ディスプレイに描画され�
 繰り返す様子が見られた．
 試行を重ねるにつれて，そのような動作が減少し，
 より短い経路でゴールに到達する様子が確認できた．
+\clearpage
 \section*{課題3.2}
-\texttt{exp2\_maze\_ql\_led.py}において，\texttt{terminal=54}および
-\texttt{terminal=50}とした場合の，試行回数に対するゴールまでの
-ステップ数の変化を，それぞれ図\ref{fig:steps54}，図\ref{fig:steps50}に示す．
+課題3.2および課題3.3では，提供されたプログラムのLED表示と待機処理を省き，
+PC上でQ学習を再実行した．開始状態を9とし，ゴールを54および50として，
+それぞれ1000回の試行を行った．学習率は0.1，割引率は0.9，探索率は0.3，
+ゴール到達時の報酬は100とした．乱数シードは20261022とした．
+以下のグラフ，Qテーブル，Q値マップは，各条件について同じ実行から取得したものである．
+
+ステップ数の変化を図\ref{fig:steps54}，図\ref{fig:steps50}に示す．
+横軸は試行番号（0から999），縦軸は1回の試行における実際の移動回数である．
+元プログラムの出力ではゴールに入る最後の1歩が数えられないため，
+本グラフではその1歩を含めて記録した．両条件とも1000回すべてでゴールに到達した．
 
 \begin{figure}[H]
-  \centering
-  \begin{minipage}[t]{0.48\linewidth}
-    \centering
-    \includegraphics[width=1\linewidth]{figs/3.2_1.png}
-    \caption{terminal=54でのステップ数変化}
-    \label{fig:steps54}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.48\linewidth}
-    \centering
-    \includegraphics[width=1\linewidth]{figs/3_2_2.png}
-    \caption{terminal=50でのステップ数変化}
-    \label{fig:steps50}
-  \end{minipage}
+\centering
+\begin{minipage}[t]{0.49\linewidth}
+\centering
+\includegraphics[width=\linewidth]{figs/修正版54.png}
+\caption{ゴール54でのステップ数変化}
+\label{fig:steps54}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\linewidth}
+\centering
+\includegraphics[width=\linewidth]{figs/修正版50.png}
+\caption{ゴール50でのステップ数変化}
+\label{fig:steps50}
+\end{minipage}
 \end{figure}
 
 \subsection*{考察}
-どちらのグラフでも，学習を繰り返すとステップ数が減っている．
-ステップ数が少ないということは，ゴールまでに必要な移動回数が
-少ないということである．このことから，学習によって遠回りが減り，
-より効率よくゴールへ進めるようになったと考えられる．
+図\ref{fig:steps54}と図\ref{fig:steps50}を見ると，どちらも学習初期には
+ステップ数が大きいが，試行を繰り返すと急に減少している．
+ゴール54では初期に約200ステップ，ゴール50では約350ステップに達する試行があるが，
+その後はどちらも数十ステップ以内の試行が多くなっている．
+このことから，学習によって遠回りが減り，少ない移動回数で
+ゴールへ進めるようになったと考えられる．
 
-\texttt{terminal=54}では，初めは約500ステップに達する試行が多く，
-約400回目までは，ときどきステップ数が大きく増えている．
-一方，\texttt{terminal=50}では，初めは約260ステップだったが，
-数十回の試行で大きく減り，その後も少ないステップ数が続いている．
-この違いから，今回の実験では\texttt{terminal=50}の方が，
-早い段階でゴールへ効率よく進む方法を学習したと考えられる．
+% また，学習後半にもステップ数がときどき増えており，
+% 毎回同じ回数でゴールに着いているわけではない．
+% 今回のプログラムでは学習後も探索を続けるため，
+% 途中で別の方向へ進むことが，このばらつきの一因と考えられる．
 
+% 後半のステップ数は，ゴール50の方がゴール54より少ない傾向が見られる．
+% ただし，2枚のグラフは縦軸の目盛りが異なるため，線の高さだけでなく
+% 数値を見て比較する必要がある．また，このグラフだけでは，
+% ステップ数の違いがゴールまでの距離によるものか，学習の進み方によるものかは判断できない．
+% 最短経路を学習できたかどうかについても，実際の移動経路を確認する必要がある．
 
+\clearpage
 \section*{課題3.3}
-\texttt{terminal=54}および\texttt{terminal=50}における
-学習終了時のQ値マップを，それぞれ図\ref{fig:qmap54}，
-図\ref{fig:qmap50}に示す．
-いずれの画像も，画面上に\texttt{episode=999}，
-\texttt{epsilon=0.30}と表示された時点のものである．
+PCでの学習終了時に保存した\texttt{q\_table.dat}の数値を確認した．
+Qテーブルは64行4列であり，行は状態0から63，列は左から上・下・左・右の行動に対応する．
+状態番号は8列の盤面に左上から横方向へ順に付けられている．
+表\ref{tab:qvalues}に，Q値が高かった状態・行動対の例を示す．
+表示値は小数第3位までとした．
+
+\begin{table}[H]
+\centering
+\caption{学習終了時のQテーブルから抜粋した状態・行動対}
+\label{tab:qvalues}
+\begin{tabular}{crcrr}
+\hline
+ゴール & 状態 & 行動 & 移動先 & Q値 \\
+\hline
+54 & 53 & 右 & 54 & 100.000 \\
+54 & 45 & 下 & 53 & 90.000 \\
+54 & 52 & 右 & 53 & 90.000 \\
+50 & 42 & 下 & 50 & 100.000 \\
+50 & 49 & 右 & 50 & 99.976 \\
+50 & 34 & 下 & 42 & 90.000 \\
+\hline
+\end{tabular}
+\end{table}
+
+同じQテーブルから作成したQ値マップを図\ref{fig:qmap54}，図\ref{fig:qmap50}に示す．
+各マスでは4方向のQ値の最大値を表示しており，青ほど小さく，赤ほど大きい．
+方向ごとの値はQテーブルで確認する必要がある．
 
 \begin{figure}[H]
-  \centering
-  \begin{minipage}[t]{0.48\linewidth}
-    \centering
-    \includegraphics[width=0.8\linewidth]{photos/photo_2.png}
-    \caption{terminal=54でのQ値マップ}
-    \label{fig:qmap54}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.48\linewidth}
-    \centering
-    \includegraphics[width=0.8\linewidth]{photos/photo_3.png}
-    \caption{terminal=50でのQ値マップ}
-    \label{fig:qmap50}
-  \end{minipage}
+\centering
+\begin{minipage}[t]{0.49\linewidth}
+\centering
+\includegraphics[width=\linewidth]{pc_results/terminal_54/heetmap.png}
+\caption{ゴール54でのQ値マップ}
+\label{fig:qmap54}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\linewidth}
+\centering
+\includegraphics[width=\linewidth]{pc_results/terminal_50/heetmap.png}
+\caption{ゴール50でのQ値マップ}
+\label{fig:qmap50}
+\end{minipage}
 \end{figure}
 
 \subsection*{考察}
-2枚のQ値マップを比べると，\texttt{terminal=54}では右側に，
-\texttt{terminal=50}では中央から左側に赤色や黄色が多く見られる．
-このように，条件を変えると色の分布も変化した．
-赤色ほどQ値が大きい表示であれば，赤色の部分には，
-高く評価された行動があると考えられる．
+ゴール54では，左隣の状態53から右へ動く行動のQ値が約100となった．
+ゴール50でも，上隣の状態42から下へ動く行動が約100，
+左隣の状態49から右へ動く行動が約99.976と高い値になった．
+これらはゴールへ直接入る行動である．プログラムではゴール到達時の報酬が100なので，
+繰り返し学習することで，これらの行動のQ値が100に近づいたと考えられる．
 
-Q値は，簡単に言うと「その場所で，その方向へ動くことが，
-今後どのくらい報酬につながるか」を表す値である．
-ゴールに着くと報酬がもらえる設定なら，例えばゴールの左隣の
-マスで右へ動く行動は，すぐに報酬を得られるため，
-Q値が大きくなると考えられる．
-また，ゴールから離れたマスでも，その先でゴールにつながる行動は，
-学習を繰り返すことで高く評価されるようになると考えられる．
+ゴール54に対して，状態45から下の状態53へ動く行動のQ値は約90だった．
+この行動のあとに右へ動けばゴールに到達できる．割引率が0.9なので，
+1回先の行動の価値100が$0.9\times100=90$として更新に使われたと考えられる．
+したがって，すぐにゴールへ入る行動だけでなく，その先でゴールにつながる行動も高く評価された．
 
-
-
+なお，ゴールのマス自体のQ値は小さいままだが，これは到達した時点で試行を終え，
+ゴールから先の行動を学習しないためである．ゴールの価値が低いことを意味するわけではない．
+また，各行動が選ばれる回数は異なるため，同じ距離の行動でもQ値が完全に一致するとは限らない．
 \end{document}
