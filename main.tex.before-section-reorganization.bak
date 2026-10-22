@@ -1,0 +1,76 @@
+\documentclass[a4paper,11pt]{ltjsarticle}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+
+\title{工学実験 第三回課題}
+\author{202025093}
+\date{2026/10/15}
+
+\begin{document}
+\maketitle
+
+\section*{課題3.1}
+Q学習がどのように進んでいるか，ディスプレイに描画されるエージェントの動きを図\ref{fig:photo1}に添付する．
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\linewidth]{photos/photo_1.jpeg}
+  \caption{Q学習におけるエージェントの動作}
+  \label{fig:photo1}
+\end{figure}
+学習初期には、エージェントが遠回りや同じ場所への移動を
+繰り返す様子が見られた。
+試行を重ねるにつれて、そのような動作が減少し、
+より短い経路でゴールに到達する様子が確認できた。
+\section*{課題3.2}
+\texttt{exp2\_maze\_ql\_led.py}のterminal=54にしたときのステップ数の変化をグラフにしたものを図\ref{fig:steps54}に示す．また，Q値マップを図\ref{fig:qmap54}に示す．
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figs/3.2_1.png}
+    \caption{terminal=54でのステップ数変化}
+    \label{fig:steps54}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{photos/photo_2.png}
+    \caption{terminal=54でのQ値マップ}
+    \label{fig:qmap54}
+  \end{minipage}
+\end{figure}
+次に，terminal=50にしたときのステップ数の変化をグラフにしたものを図\ref{fig:steps50}に示す．また，Q値マップを\ref{fig:qmap50}示す．
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figs/3_2_2.png}
+    \caption{terminal=50でのステップ数変化}
+    \label{fig:steps50}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{photos/photo_3.png}
+    \caption{terminal=50でのQ値マップ}
+    \label{fig:qmap50}
+  \end{minipage}
+\end{figure}
+
+\subsection*{考察}
+  いずれの条件でも、試行回数の増加に伴ってゴールまでの
+ステップ数が減少した。この結果から、学習によって
+効率よくゴールへ到達する行動を獲得したと考えられる。
+terminal=54では、約400エピソードまではステップ数が
+大きく増加する試行が見られた。一方、terminal=50では、
+学習開始後の数十エピソード程度でステップ数が大きく減少した。
+したがって、今回の実験ではterminal=50の方が、
+少ない試行回数で効率的な行動を獲得したと考えられる。
+また、Q値マップの色の分布も条件によって異なっており、
+学習されたQ値の分布に違いが確認できた。
+
+  
+\end{document}
